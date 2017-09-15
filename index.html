@@ -26,7 +26,10 @@
         :root {
             --tx: 0;
             --ty: 0;
-            --sc: 1;
+            --scx: 1;
+            --scy: 1;
+            --skx: 0deg;
+            --sky: 0deg;
             --rt: 0deg;
         }
 
@@ -37,7 +40,9 @@
             margin-top: 10px;
             transform:
                 translate3d(var(--tx), var(--ty), 0)
-                scale(var(--sc))
+                scale(var(--scx), var(--scy))
+                skewX(var(--skx))
+                skewY(var(--sky))
                 rotate(var(--rt));
 
             --hue: 120;
@@ -89,11 +94,20 @@
         <label for="ty">0<span>translateY</span>100</label>
         <input value="0" min="0" max="100" id="ty" type="range">
 
-        <label for="sc">0<span>scale</span>3</label>
-        <input value="1" min="0" step="0.5" max="3" id="sc" type="range">
+        <label for="scx">0<span>scaleX</span>3</label>
+        <input value="1" min="0" step="0.3" max="3" id="scx" type="range">
+
+        <label for="scy">0<span>scaleY</span>3</label>
+        <input value="1" min="0" step="0.3" max="3" id="scy" type="range">
 
         <label for="rt">0<span>rotate</span>360</label>
         <input value="0" min="0" max="360" id="rt" type="range">
+
+        <label for="skx">0<span>skewX</span>360</label>
+        <input value="0" min="0" max="360" id="skx" type="range">
+
+        <label for="sky">0<span>skewY</span>360</label>
+        <input value="0" min="0" max="360" id="sky" type="range">
     </div>
 
     <script>
@@ -101,13 +115,16 @@
         const range = {
             tx: document.getElementById('tx'),
             ty: document.getElementById('ty'),
-            sc: document.getElementById('sc'),
-            rt: document.getElementById('rt')
+            scx: document.getElementById('scx'),
+            scy: document.getElementById('scy'),
+            skx: document.getElementById('skx'),
+            sky: document.getElementById('sky'),
+            rt: document.getElementById('rt'),
         };
         function valueChange(id, value, tag='') {
             if (id === 'tx') tag = 'vw';
             if (id === 'ty') tag = 'vh';
-            if (id === 'rt') tag = 'deg';
+            if (id === 'rt' || id === 'skx' || id === 'sky') tag = 'deg';
             style.setProperty(`--${id}`, value + tag);
         }
         Object.keys(range).forEach(i => {
