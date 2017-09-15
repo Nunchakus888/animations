@@ -104,67 +104,17 @@
             sc: document.getElementById('sc'),
             rt: document.getElementById('rt')
         };
-        const value = {
-            tx: document.getElementById('tx').value,
-            ty: document.getElementById('ty').value,
-            sc: document.getElementById('sc').value,
-            rt: document.getElementById('rt').value
-        };
         function valueChange(id, value, tag='') {
+            if (id === 'tx') tag = 'vw';
+            if (id === 'ty') tag = 'vh';
+            if (id === 'rt') tag = 'deg';
             style.setProperty(`--${id}`, value + tag);
         }
-        range.tx.addEventListener('input', function (val) {
-            valueChange('tx', val.target.value, 'vw');
-        });
-        range.ty.addEventListener('input', function (val) {
-            valueChange('ty', val.target.value, 'vh');
-        });
-        range.sc.addEventListener('input', function (val) {
-            valueChange('sc', val.target.value);
-        });
-        range.rt.addEventListener('input', function (val) {
-            valueChange('rt', val.target.value, 'deg');
-        });
-
-        document.onkeydown = e => {
-            switch (e.keyCode) {
-                case 37:
-                    console.log(range.tx.value);
-                    --range.tx.value;
-                    break;
-                case 40:
-                    ++range.tx.value;
-                    break;
-                case 38:
-                    --range.ty.value;
-                    break;
-                case 39:
-                    ++range.ty.value;
-                    break;
-            }
-        };
-
-        function reactiveDefineproperty(o, key, value, cb) {
-            Object.defineProperty(o, key, {
-                get: function () {
-                    console.log('get----->');
-                    return value;
-                },
-                set: function (nv) {
-                    value = nv;
-                    console.log('set----->');
-                }
+        Object.keys(range).forEach(i => {
+            range[i].addEventListener('input', val => {
+                valueChange(i, val.target.value);
             })
-        }
-
-        function observable(o, cb) {
-            Object.keys(o).forEach(i => {
-                reactiveDefineproperty(o, i, o[i], cb)
-            });
-        }
-        observable(value, function () {
-            alert();
-        })
+        });
     </script>
 </body>
 </html>
