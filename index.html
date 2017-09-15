@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>animation</title>
+    <style>
+        body {
+            overflow-y: hidden;
+        }
+        #control {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 400px;
+            height: 300px;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        #control > label {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        :root {
+            --tx: 0;
+            --ty: 0;
+            --sc: 1;
+            --rt: 0deg;
+        }
+
+        .go {
+            width: 10vmin;
+            height: 10vmin;
+            border-radius: 20%;
+            margin-top: 10px;
+            transform:
+                translate3d(var(--tx), var(--ty), 0)
+                scale(var(--sc))
+                rotate(var(--rt));
+
+            --hue: 120;
+            --duration: 2000ms;
+
+            transition: transform var(--duration);
+            background: hsl(var(--hue), 90%, 30%);
+        }
+
+        .go:nth-of-type(n) {
+            --hue: 10;
+            --duration: 1000ms;
+        }
+        .go:nth-of-type(2n) {
+            --hue: 50;
+            --duration: 2000ms;
+        }
+        .go:nth-of-type(3n) {
+            --hue: 70;
+            --duration: 3000ms;
+        }
+        .go:nth-of-type(4n) {
+            --hue: 200;
+            --duration: 4000ms;
+        }
+        .go:nth-of-type(5n) {
+            --hue: 120;
+            --duration: 5000ms;
+        }
+        .go:nth-of-type(6n) {
+            --hue: 160;
+            --duration: 6000ms;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="go"></div>
+    <div class="go"></div>
+    <div class="go"></div>
+    <div class="go"></div>
+    <div class="go"></div>
+    <div class="go"></div>
+
+    <div id="control">
+        <label for="tx">0<span>translateX</span>100</label>
+        <input value="0" min="0" max="100" id="tx" type="range">
+
+        <label for="ty">0<span>translateY</span>100</label>
+        <input value="0" min="0" max="100" id="ty" type="range">
+
+        <label for="sc">0<span>scale</span>3</label>
+        <input value="1" min="0" step="0.5" max="3" id="sc" type="range">
+
+        <label for="rt">0<span>rotate</span>360</label>
+        <input value="0" min="0" max="360" id="rt" type="range">
+    </div>
+
+    <script>
+        const style = document.documentElement.style;
+        const range = {
+            tx: document.getElementById('tx'),
+            ty: document.getElementById('ty'),
+            sc: document.getElementById('sc'),
+            rt: document.getElementById('rt')
+        };
+        const value = {
+            tx: document.getElementById('tx').value,
+            ty: document.getElementById('ty').value,
+            sc: document.getElementById('sc').value,
+            rt: document.getElementById('rt').value
+        };
+        function valueChange(id, value, tag='') {
+            style.setProperty(`--${id}`, value + tag);
+        }
+        range.tx.addEventListener('input', function (val) {
+            valueChange('tx', val.target.value, 'vw');
+        });
+        range.ty.addEventListener('input', function (val) {
+            valueChange('ty', val.target.value, 'vh');
+        });
+        range.sc.addEventListener('input', function (val) {
+            valueChange('sc', val.target.value);
+        });
+        range.rt.addEventListener('input', function (val) {
+            valueChange('rt', val.target.value, 'deg');
+        });
+
+        document.onkeydown = e => {
+            switch (e.keyCode) {
+                case 37:
+                    console.log(range.tx.value);
+                    --range.tx.value;
+                    break;
+                case 40:
+                    ++range.tx.value;
+                    break;
+                case 38:
+                    --range.ty.value;
+                    break;
+                case 39:
+                    ++range.ty.value;
+                    break;
+            }
+        };
+
+        function reactiveDefineproperty(o, key, value, cb) {
+            Object.defineProperty(o, key, {
+                get: function () {
+                    console.log('get----->');
+                    return value;
+                },
+                set: function (nv) {
+                    value = nv;
+                    console.log('set----->');
+                }
+            })
+        }
+
+        function observable(o, cb) {
+            Object.keys(o).forEach(i => {
+                reactiveDefineproperty(o, i, o[i], cb)
+            });
+        }
+        observable(value, function () {
+            alert();
+        })
+    </script>
+</body>
+</html>
