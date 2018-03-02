@@ -1,1 +1,1 @@
-http://www.tiebang.tech/animations/
+https://nunchakus888.github.io/animations/
